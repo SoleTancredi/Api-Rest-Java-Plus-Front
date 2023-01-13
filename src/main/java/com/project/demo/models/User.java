@@ -1,8 +1,15 @@
 package com.project.demo.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+@Entity
+@Table(name = "users")
 public class User {
 
     private Long id;
@@ -15,11 +22,19 @@ public class User {
 
     public static final class UserBuilder {
 
+
+        @Id // -> indicates this is to be the primary key
+        @Getter @Column(name = "id")
         private Long id;
+        @Getter @Column(name = "name")
         private String name;
+        @Getter @Column(name = "lastname")
         private String lastName;
+        @Getter @Column(name = "email")
         private String email;
+        @Getter @Column(name = "telephone")
         private String telephone;
+        @Getter @Column(name = "password")
         private String password;
 
         private UserBuilder() {
@@ -72,27 +87,4 @@ public class User {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }

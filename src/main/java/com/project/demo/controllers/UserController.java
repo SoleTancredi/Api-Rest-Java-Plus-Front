@@ -1,6 +1,8 @@
 package com.project.demo.controllers;
 
+import com.project.demo.dao.UserDao;
 import com.project.demo.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,13 @@ import static com.project.demo.models.User.UserBuilder.anUser;
 
 @RestController
 public class UserController {
+
+    //makes the userDaoImp class create an object and stores it in this variable,
+    // if use in others parts de proyect this object will be shared in memory
+    // so that not too many of these are created.
+    //DEPENDENCY INJECTION
+    @Autowired
+    private UserDao userDao;
 
     @RequestMapping(value = "user/{id}")
     public User getUser(@PathVariable Long id){
@@ -30,36 +39,6 @@ public class UserController {
 
     @RequestMapping(value = "users")
     public List<User> getUsers(){
-        List<User> users = new ArrayList<>();
-
-        User user1 = anUser()
-                .witId(12L)
-                .withName("sole")
-                .withLastName("tancredi")
-                .withEmail("tancredi620@gmail.com")
-                .withTelephone("1168083141")
-                .withPassword("1234").build();
-
-        User user2 = anUser()
-                .witId(21L)
-                .withName("martin")
-                .withLastName("maldonado")
-                .withEmail("maldonado@gmail.com")
-                .withTelephone("11111111")
-                .withPassword("5555555").build();
-
-        User user3 = anUser()
-                .witId(31L)
-                .withName("esther")
-                .withLastName("alvarez")
-                .withEmail("ealv@gmail.com")
-                .withTelephone("17854296")
-                .withPassword("12356468").build();
-
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-
-        return users;
+        return userDao.getUsers();
     }
 }
