@@ -12,29 +12,33 @@ import org.jetbrains.annotations.NotNull;
 @Table(name = "users")
 public class User {
 
+
+    @Id // -> indicates this is to be the primary key
+    @Getter @Column(name = "id")
     private Long id;
+    @Getter @Column(name = "name")
     private String name;
+    @Getter @Column(name = "lastname")
     private String lastName;
+    @Getter @Column(name = "email")
     private String email;
+    @Getter @Column(name = "telephone")
     private String telephone;
+    @Getter @Column(name = "password")
     private String password;
 
 
     public static final class UserBuilder {
-
-
-        @Id // -> indicates this is to be the primary key
-        @Getter @Column(name = "id")
         private Long id;
-        @Getter @Column(name = "name")
+
         private String name;
-        @Getter @Column(name = "lastname")
+
         private String lastName;
-        @Getter @Column(name = "email")
+
         private String email;
-        @Getter @Column(name = "telephone")
+
         private String telephone;
-        @Getter @Column(name = "password")
+
         private String password;
 
         private UserBuilder() {

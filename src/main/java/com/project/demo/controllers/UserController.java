@@ -5,6 +5,7 @@ import com.project.demo.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -22,9 +23,8 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(value = "user/{id}")
+    @RequestMapping(value = "api/users/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable Long id){
-
 
         User user = anUser()
                 .witId(id)
@@ -37,8 +37,14 @@ public class UserController {
         return user;
     }
 
-    @RequestMapping(value = "users")
+    @RequestMapping(value = "api/users")
     public List<User> getUsers(){
         return userDao.getUsers();
+    }
+
+    @RequestMapping(value = "api/users/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable Long id){
+        userDao.delete(id);
+
     }
 }
