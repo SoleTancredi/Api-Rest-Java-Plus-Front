@@ -1,9 +1,6 @@
 package com.project.demo.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +11,7 @@ public class User {
 
 
     @Id // -> indicates this is to be the primary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter @Column(name = "id")
     private Long id;
     @Getter @Column(name = "name")

@@ -2,11 +2,11 @@ package com.project.demo.controllers;
 
 import com.project.demo.dao.UserDao;
 import com.project.demo.models.User;
+import com.project.demo.utils.JWTUtils;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,9 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private JWTUtils jwtUtils;
+
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable Long id){
 
@@ -37,13 +40,43 @@ public class UserController {
         return user;
     }
 
-    @RequestMapping(value = "api/users")
-    public List<User> getUsers(){
+    @RequestMapping(value = "api/users", method = RequestMethod.POST)
+    public void registerUser(@RequestBody User user){
+
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        String hash = argon2.hash(1,1024,1,user.getPassword());
+        User userPasswordHash = anUser()
+                .witId(user.getId())
+                .withName(user.getName())
+                .withLastName(user.getLastName())
+                .withEmail(user.getEmail())
+                .withTelephone(user.getTelephone())
+                .withPassword(hash).build();
+
+        userDao.register(userPasswordHash);
+    }
+
+    @RequestMapping(value = "api/users", method = RequestMethod.GET)
+    public List<User> getUsers(@RequestHeader(value = "Authorization") String token){
+
+        if(!validateToken(token)){
+            return null;
+        }
+
+
         return userDao.getUsers();
     }
 
+    private boolean validateToken(String token){
+        String userId = jwtUtils.getKey(token);
+        return userId != null;
+    }
+
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Long id){
+    public void delete(@RequestHeader(value = "Authorization") String token, @PathVariable Long id){
+        if(!validateToken(token)){
+            return;
+        }
         userDao.delete(id);
 
     }
